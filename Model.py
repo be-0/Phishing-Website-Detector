@@ -40,7 +40,7 @@ Y = phishing_websites.data.targets
 
 X = X.select_dtypes(include=[np.number])
 
-# Map target labels: -1 -> 0, 0 -> 1, 1 -> 2 (Pytorch's CrossEntropyLoss does not accept negative targets)
+# Map target labels: -1 -> 0, 0 -> 1, 1 -> 2 (Pytorch's CrossEntropyLoss() does not accept negative targets)
 Y = Y.replace({-1: 0, 0: 1, 1: 2})
 
 # Split the data (80% train, 20% validation). Set random_state = random_seed.
@@ -49,8 +49,8 @@ X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size = 0.2, random_
 # Convert to PyTorch Tensors
 X_train_t = torch.tensor(X_train.values, dtype=torch.float32)
 X_val_t = torch.tensor(X_val.values, dtype=torch.float32)
-y_train_t = torch.tensor(Y_train.values, dtype=torch.long)
-y_val_t = torch.tensor(Y_val.values, dtype=torch.long)
+y_train_t = torch.tensor(Y_train.values, dtype=torch.long).view(-1)
+y_val_t = torch.tensor(Y_val.values, dtype=torch.long).view(-1)
 
 print(f"Training features shape: {X_train_t.shape}")
 print(f"Validation features shape: {X_val_t.shape}")
@@ -82,7 +82,6 @@ def calculate_full_loss(model, criterion, X, y):
     model.eval() # Set model to evaluation mode
     with torch.no_grad(): # Disable gradient calculation
         outputs = model(X)
-        y = y.view(-1)
         loss = criterion(outputs, y)
     model.train() # Set model back to train mode
     return loss.item()

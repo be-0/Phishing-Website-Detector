@@ -46,12 +46,6 @@ Y = Y.replace({-1: 0, 0: 1, 1: 2})
 # Split the data (80% train, 20% validation). Set random_state = random_seed.
 X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size = 0.2, random_state = random_seed)
 
-# Scale the features
-hmean = np.mean(X_train)
-hstd = np.std(X_train)
-X_train = (X_train - hmean)/hstd
-X_val = (X_val - hmean)/hstd
-
 # Convert to PyTorch Tensors
 X_train_t = torch.tensor(X_train.values, dtype=torch.float32)
 X_val_t = torch.tensor(X_val.values, dtype=torch.float32)
@@ -135,7 +129,7 @@ def train_with_minibatch(model, criterion, optimizer, X_train, y_train, X_val, y
 
 # --- Set Hyperparameters ---
 LEARNING_RATE = 0.01
-NUM_ITERATIONS = 5000
+NUM_ITERATIONS = 3000
 BATCH_SIZE = 32
 CHECK_EVERY = round(NUM_ITERATIONS / 10)
 
@@ -155,8 +149,8 @@ train_losses, val_losses, iterations, model = train_with_minibatch(
 print("Plotting...")
 plt.figure(figsize=(14, 7))
 
-plt.plot(iterations, train_losses, label='Minibatch - Train Loss', linestyle=':', color='green', marker='o')
-plt.plot(iterations, val_losses, label='Minibatch - Validation Loss', linestyle='-', color='green', marker='x')
+plt.plot(iterations, train_losses, label='Train Loss', linestyle='-', color='green', marker='o')
+plt.plot(iterations, val_losses, label='Validation Loss', linestyle='-', color='blue', marker='o')
 
 plt.title('Loss plots')
 plt.xlabel('Iterations')

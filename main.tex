@@ -102,7 +102,27 @@ As the dataset is publicly available and fully labeled, no manual annotation was
 
 \section{Features}
 
-Describe any features you used for your model, or how your data was input to your model. Are you doing feature engineering or feature selection? Are you learning embeddings? Is it all part of one neural network? Refer to item 3. This may range from 0.25 pages to 0.5 pages.
+The authors of the dataset performed feature extraction using rule-based scripts applied to website URLs and other sources such as WHOIS and Alexa. These features were grouped into four main categories:
+
+\begin{itemize}
+    \item \textbf{Address Bar Features}
+    \item \textbf{Abnormal-based Features}
+    \item \textbf{HTML and JavaScript-based Features}
+    \item \textbf{Domain-based Features}
+\end{itemize}
+
+Each feature is automatically assigned a discrete value, such as $-1$ (\textit{legitimate}), $0$ (\textit{suspicious}), or $1$ (\textit{phishing}), based on heuristic rules derived from observed URL statistics. Examples include:
+
+\begin{itemize}
+    \item \texttt{having\_ip\_address}: whether the URL contains an IP address. $\{-1, 1\}$
+    \item \texttt{url\_length}: the length of the URL string. $\{-1, 0, 1\}$
+    \item \texttt{shortening\_service}: whether a URL shortening service was used. $\{-1, 1\}$
+\end{itemize}
+
+Since the dataset relies entirely on these explicit, rule-based numerical encodings, no learned embeddings were used. Therefore, no additional feature engineering or embeddings were added. 
+
+The 30 extracted features are stored in a 30-dimensional vector, represented as a \texttt{torch.Tensor}, which serves as the sole input to the neural network model.
+
 
 \section{Implementation}
 
